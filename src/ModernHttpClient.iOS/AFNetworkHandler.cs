@@ -15,6 +15,12 @@ namespace ModernHttpClient
     public class AFNetworkHandler : HttpMessageHandler
     {
         static Dictionary<NSMutableUrlRequest, object[]> pins = new Dictionary<NSMutableUrlRequest, object[]>();
+		bool allowInvalidSSL;
+
+		public AFNetworkHandler (bool allowInvalidSSL = false)
+		{
+			this.allowInvalidSSL = allowInvalidSSL;
+		}
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
@@ -49,9 +55,8 @@ namespace ModernHttpClient
 
             var blockingTcs = new TaskCompletionSource<bool>();
             var ret= default(HttpResponseMessage);
-
             try {
-                op = await enqueueOperation(handler, new AFHTTPRequestOperation(rq), cancellationToken, () => blockingTcs.SetResult(true), ex => {
+				op = await enqueueOperation(handler, new AFHTTPRequestOperation(rq){AllowsInvalidSSLCertificate = allowInvalidSSL}, cancellationToken, () => blockingTcs.SetResult(true), ex => {
                     if (ex is ApplicationException) {
                         err = (NSError)ex.Data["err"];
                     }
