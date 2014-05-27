@@ -17,8 +17,10 @@ namespace ModernHttpClient
     public class AFNetworkHandler : HttpMessageHandler
     {
         public AFHTTPClient SharedClient { get; private set; }
+        bool allowInvalidSSL;
 
-        public AFNetworkHandler(string baseUrl) {
+        public AFNetworkHandler(string baseUrl, bool allowInvalidSSL  = false) {
+            this.allowInvalidSSL = allowInvalidSSL;
             SharedClient = new AFHTTPClient(NSUrl.FromString(baseUrl));
             AFHTTPRequestOperation.AddAcceptableStatusCodes(NSIndexSet.FromNSRange(new NSRange(100, 599)));
         }
@@ -60,7 +62,7 @@ namespace ModernHttpClient
             if(UIDevice.CurrentDevice.CheckSystemVersion (6, 0))
                 rq.AllowsCellularAccess = true;
             var tcs = new TaskCompletionSource<HttpResponseMessage>();
-            var operation = new AFHTTPRequestOperation(rq);
+            var operation = new AFHTTPRequestOperation(rq){AllowsInvalidSSLCertificate = allowInvalidSSL};
             AFHttpRequestSuccessCallback completion = (op, response) => {
                 try {
                     var resp = (NSHttpUrlResponse)op.Response;

@@ -53,11 +53,11 @@
     <Folder Include="Properties\" />
     <Compile Include="AFNetworkHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Reference Include="AFNetworking">
-      <HintPath>..\..\vendor\afnetworking\AFNetworking.dll</HintPath>
-    </Reference>
     <Compile Include="..\Shared\ConcatenatingStream.cs">
       <Link>ConcatenatingStream.cs</Link>
     </Compile>
+    <Reference Include="AFNetworking">
+      <HintPath>..\..\..\AFNetworking-Sharp\AFNetworking\bin\Release\AFNetworking.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>
