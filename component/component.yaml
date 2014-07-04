@@ -1,7 +1,7 @@
 %YAML 1.2
 ---
 name: ModernHttpClient
-version: 1.0.1
+version: 2.0.1
 id: "modernhttpclient"
 publisher: Paul Betts
 publisher-url: http://blog.paulbetts.org/
@@ -14,15 +14,13 @@ icons:
   - icon_512x512.png
 libraries: 
   ios: 
-    - ../build/MonoTouch/AFNetworking.dll
-    - ../build/MonoTouch/ModernHttpClient.iOS.dll
+    - ../build/MonoTouch/ModernHttpClient.dll
   android:
     - ../build/MonoAndroid/OkHttp.dll
-    - ../build/MonoAndroid/ModernHttpClient.Android.dll
+    - ../build/MonoAndroid/ModernHttpClient.dll
 samples: 
   - name: "HttpClient.iOS Sample"
     path: ../samples/HttpClient.iOS/HttpClient.iOS.sln
   - name: "HttpClient.Android Sample"
     path: ../samples/HttpClient.Android/HttpClient.Android.sln
 ...
-

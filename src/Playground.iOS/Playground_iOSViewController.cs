@@ -8,6 +8,8 @@ using System.Diagnostics;
 using ModernHttpClient;
 using System.Text;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Playground.iOS
 {
@@ -15,6 +17,17 @@ namespace Playground.iOS
     {
         public Playground_iOSViewController () : base ("Playground_iOSViewController", null)
         {
+            /*
+            Task.Run (async () => {
+                var client = new HttpClient(new NSUrlSessionHandler());
+
+                var item = new { MyProperty = "Property Value" };
+                var content = new StringContent(JsonConvert.SerializeObject(item), Encoding.UTF8, "application/json");
+                var result = await client.PostAsync("http://requestb.in/1aj9b9c1", content);
+
+                result.EnsureSuccessStatusCode();
+            });
+            */
         }
 
         CancellationTokenSource currentToken;
@@ -26,19 +39,44 @@ namespace Playground.iOS
             if (resp != null) resp.Content.Dispose();
         }
 
+        void HandleDownloadProgress(long bytes, long totalBytes, long totalBytesExpected)
+        {
+            Console.WriteLine("Downloading {0}/{1}", totalBytes, totalBytesExpected);
+
+            BeginInvokeOnMainThread(() => {
+                var progressPercent = (float)totalBytes / (float)totalBytesExpected;
+                progress.SetProgress(progressPercent, animated: true);
+            });
+        }
+
         async partial void doIt (MonoTouch.Foundation.NSObject sender)
         {
-            var client = new HttpClient(new AFNetworkHandler());
+            var handler = new NativeMessageHandler();
+            var client = new HttpClient(handler);
+
             currentToken = new CancellationTokenSource();
             var st = new Stopwatch();
 
             st.Start();
             try {
-                var url = "https://github.com/paulcbetts/ModernHttpClient/releases/download/0.9.0/ModernHttpClient-0.9.zip";
-                //var url = "https://github.com/downloads/nadlabak/android/cm-9.1.0a-umts_sholes.zip";
+                //var url = "https://github.com/paulcbetts/ModernHttpClient/releases/download/0.9.0/ModernHttpClient-0.9.zip";
+                var url = "https://github.com/downloads/nadlabak/android/cm-9.1.0a-umts_sholes.zip";
 
-                resp = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, currentToken.Token);
+                var request = new HttpRequestMessage(HttpMethod.Get, url);
+                handler.RegisterForProgress(request, HandleDownloadProgress);
+
+                resp = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, currentToken.Token);
                 result.Text = "Got the headers!";
+
+                Console.WriteLine("Headers");
+                foreach (var v in resp.Headers) {
+                    Console.WriteLine("{0}: {1}", v.Key, String.Join(",", v.Value));
+                }
+
+                Console.WriteLine("Content Headers");
+                foreach (var v in resp.Content.Headers) {
+                    Console.WriteLine("{0}: {1}", v.Key, String.Join(",", v.Value));
+                }
 
                 var bytes = await resp.Content.ReadAsByteArrayAsync();
                 result.Text = String.Format("Read {0} bytes", bytes.Length);

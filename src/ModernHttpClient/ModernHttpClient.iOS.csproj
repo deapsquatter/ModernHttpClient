@@ -3,20 +3,21 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>10.0.0</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{0F2A1CC8-4168-4CB4-B334-28C28BA51ECB}</ProjectGuid>
     <ProjectTypeGuids>{6BC8ED88-2882-458C-8E55-DFD12B67127B};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <RootNamespace>ModernHttpClient</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
-    <AssemblyName>ModernHttpClient.iOS</AssemblyName>
+    <AssemblyName>ModernHttpClient</AssemblyName>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
+    <OutputPath>bin\Debug\Monotouch</OutputPath>
+    <IntermediateOutputPath>obj\Debug\Monotouch</IntermediateOutputPath>
     <DefineConstants>DEBUG; UIKIT</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -24,20 +25,22 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <CustomCommands>
       <CustomCommands>
-        <Command type="BeforeBuild" command="make AFNetworking.dll" workingdir="${SolutionDir}" />
+        <Command type="BeforeBuild" command="" workingdir="${SolutionDir}" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release</OutputPath>
+    <OutputPath>bin\Release\Monotouch</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <IntermediateOutputPath>obj\Release\Monotouch</IntermediateOutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <CustomCommands>
       <CustomCommands>
-        <Command type="BeforeBuild" command="make AFNetworking.dll" workingdir="${SolutionDir}" />
+        <Command type="BeforeBuild" command="" workingdir="${SolutionDir}" />
       </CustomCommands>
     </CustomCommands>
     <DefineConstants>UIKIT</DefineConstants>
@@ -49,18 +52,13 @@
     <Reference Include="System.Core" />
     <Reference Include="monotouch" />
     <Reference Include="System.Net.Http" />
-    <Folder Include="Resources\" />
-    <Folder Include="Properties\" />
-    <Compile Include="AFNetworkHandler.cs" />
+    <Compile Include="iOS\NSUrlSessionHandler.cs" />
+    <Compile Include="iOS\AsyncLock.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Reference Include="AFNetworking">
-      <HintPath>..\..\vendor\afnetworking\AFNetworking.dll</HintPath>
-    </Reference>
-    <Compile Include="..\Shared\ConcatenatingStream.cs">
-      <Link>ConcatenatingStream.cs</Link>
-    </Compile>
-    <Compile Include="..\Shared\AsyncLock.cs">
-      <Link>AsyncLock.cs</Link>
-    </Compile>
+    <Compile Include="CaptiveNetworkException.cs" />
+    <Compile Include="ProgressStreamContent.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
 </Project>

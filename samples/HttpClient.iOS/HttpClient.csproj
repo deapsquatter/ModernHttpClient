@@ -20,7 +20,7 @@
     <WarningLevel>4</WarningLevel>
     <MtouchDebug>True</MtouchDebug>
     <MtouchLink>None</MtouchLink>
-    <MtouchSdkVersion>6.0</MtouchSdkVersion>
+    <MtouchSdkVersion>7.0</MtouchSdkVersion>
     <MtouchI18n>
     </MtouchI18n>
     <MtouchArch>ARMv7</MtouchArch>
@@ -65,7 +65,7 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Net.Http" />
     <Reference Include="ModernHttpClient.iOS">
-      <HintPath>..\..\build\MonoTouch\ModernHttpClient.iOS.dll</HintPath>
+      <HintPath>..\..\build\MonoTouch\ModernHttpClient.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
