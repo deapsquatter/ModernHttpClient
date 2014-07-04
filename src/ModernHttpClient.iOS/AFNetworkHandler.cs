@@ -38,7 +38,7 @@ namespace ModernHttpClient
             //just map everything to a temporary exception
             throw new WebException("IO Exception", e, WebExceptionStatus.ConnectFailure, null);
         }
-        private HashSet<TaskCompletionSource<HttpResponseMessage>> _Pending = new HashSet<TaskCompletionSource<HttpResponseMessage>>();
+        private HashSet<object> _Pending = new HashSet<object>();
         protected async Task<HttpResponseMessage> InternalSendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             var headers = request.Headers as IEnumerable<KeyValuePair<string, IEnumerable<string>>>;
@@ -100,8 +100,12 @@ namespace ModernHttpClient
             // - tcs is unreferenced, so it is GCed, meaning the awaiter structure is GCed
             // - if just the right GC happens, junk await callbacks come to life. causin a complete
             //   block in one of the enclosing asyncs to restart in a random state
-            lock(_Pending)
+            lock(_Pending) {
                 _Pending.Add(tcs);
+                _Pending.Add(operation);
+                _Pending.Add(completion);
+                _Pending.Add(failure);
+            }
             try {
                 var http_response = await tcs.Task;
                 return http_response;
@@ -109,8 +113,12 @@ namespace ModernHttpClient
                 Console.WriteLine("failed response {0}", e);
                 throw;
             } finally {
-                lock(_Pending)
+                lock(_Pending) {
                     _Pending.Remove(tcs);
+                    _Pending.Remove(operation);
+                    _Pending.Remove(completion);
+                    _Pending.Remove(failure);
+                }
                 operation.Dispose();
             }
         }
